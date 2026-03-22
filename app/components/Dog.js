@@ -1,75 +1,239 @@
-'use client';
-import * as THREE from 'three';
-import { useEffect } from 'react';
-import { useThree } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import { SRGBColorSpace } from 'three';
+import React, { useEffect, useRef } from 'react'
+import * as THREE from "three"
+import { Canvas, useThree } from '@react-three/fiber'
+import { OrbitControls, useGLTF, useTexture, useAnimations } from '@react-three/drei'
+import gsap from "gsap";
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-export default function Dog() {
-  const model = useGLTF('/models/dog.drc.glb');
-  const { camera, scene } = useThree();
 
-  useThree(({ gl }) => {
-    gl.toneMapping = THREE.ReinhardToneMapping;
-    gl.outputColorSpace = THREE.SRGBColorSpace;
-  });
+const Dog = () => {
 
-  useEffect(() => {
-    camera.position.set(0, 1.8, 5.8);
-  }, [camera]);
 
-  useEffect(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 2048;
-    canvas.height = 1024;
+    gsap.registerPlugin(useGSAP())
+    gsap.registerPlugin(ScrollTrigger)
 
-    const context = canvas.getContext('2d');
-    if (!context) return;
 
-    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#060a17');
-    gradient.addColorStop(0.45, '#101a33');
-    gradient.addColorStop(1, '#1b2645');
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    const model = useGLTF("/models/dog.drc.glb")
 
-    context.fillStyle = 'rgba(168, 196, 255, 0.1)';
-    context.beginPath();
-    context.arc(canvas.width * 0.8, canvas.height * 0.28, 140, 0, Math.PI * 2);
-    context.fill();
+    useThree(({ camera, scene, gl }) => {
+        camera.position.z = 0.55
+        gl.toneMapping = THREE.ReinhardToneMapping
+        gl.outputColorSpace = THREE.SRGBColorSpace
+    })
 
-    context.fillStyle = 'rgba(120, 150, 220, 0.08)';
-    for (let index = 0; index < 90; index++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height * 0.75;
-      const size = Math.random() * 2.2;
-      context.fillRect(x, y, size, size);
+    const { actions } = useAnimations(model.animations, model.scene)
+
+    useEffect(() => {
+        actions[ "Take 001" ].play()
+    }, [ actions ])
+
+
+
+    const [ normalMap ] = (useTexture([ "/dog_normals.jpg", ]))
+        .map(texture => {
+            texture.flipY = false
+            texture.colorSpace = THREE.SRGBColorSpace
+            return texture
+        })
+
+    const [ branchMap, branchNormalMap ] = (useTexture([ "/branches_diffuse.jpeg", "branches_normals.jpeg" ]))
+        .map(texture => {
+            texture.colorSpace = THREE.SRGBColorSpace
+            return texture
+        })
+
+    const [
+        mat1,
+        mat2,
+        mat3,
+        mat4,
+        mat5,
+        mat6,
+        mat7,
+        mat8,
+        mat9,
+        mat10,
+        mat11,
+        mat12,
+        mat13,
+        mat14,
+        mat15,
+        mat16,
+        mat17,
+        mat18,
+        mat19,
+        mat20
+    ] = (useTexture([
+        "/matcap/mat-1.png",
+        "/matcap/mat-2.png",
+        "/matcap/mat-3.png",
+        "/matcap/mat-4.png",
+        "/matcap/mat-5.png",
+        "/matcap/mat-6.png",
+        "/matcap/mat-7.png",
+        "/matcap/mat-8.png",
+        "/matcap/mat-9.png",
+        "/matcap/mat-10.png",
+        "/matcap/mat-11.png",
+        "/matcap/mat-12.png",
+        "/matcap/mat-13.png",
+        "/matcap/mat-14.png",
+        "/matcap/mat-15.png",
+        "/matcap/mat-16.png",
+        "/matcap/mat-17.png",
+        "/matcap/mat-18.png",
+        "/matcap/mat-19.png",
+        "/matcap/mat-20.png",
+    ])).map(texture => {
+        texture.colorSpace = THREE.SRGBColorSpace
+        return texture
+    })
+
+    const material = useRef({
+        uMatcap1: { value: mat19 },
+        uMatcap2: { value: mat2 },
+        uProgress: { value: 1.0 }
+    })
+
+    const dogMaterial = new THREE.MeshMatcapMaterial({
+        normalMap: normalMap,
+        matcap: mat2
+    })
+
+    const branchMaterial = new THREE.MeshMatcapMaterial({
+        normalMap: branchNormalMap,
+        map: branchMap
+    })
+
+    function onBeforeCompile(shader) {
+        shader.uniforms.uMatcapTexture1 = material.current.uMatcap1
+        shader.uniforms.uMatcapTexture2 = material.current.uMatcap2
+        shader.uniforms.uProgress = material.current.uProgress
+
+        // Store reference to shader uniforms for GSAP animation
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+            "void main() {",
+            `
+        uniform sampler2D uMatcapTexture1;
+        uniform sampler2D uMatcapTexture2;
+        uniform float uProgress;
+
+        void main() {
+        `
+        )
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+            "vec4 matcapColor = texture2D( matcap, uv );",
+            `
+          vec4 matcapColor1 = texture2D( uMatcapTexture1, uv );
+          vec4 matcapColor2 = texture2D( uMatcapTexture2, uv );
+          float transitionFactor  = 0.2;
+          
+          float progress = smoothstep(uProgress - transitionFactor,uProgress, (vViewPosition.x+vViewPosition.y)*0.5 + 0.5);
+
+          vec4 matcapColor = mix(matcapColor2, matcapColor1, progress );
+        `
+        )
     }
 
-    const gradientBackground = new THREE.CanvasTexture(canvas);
-    gradientBackground.colorSpace = SRGBColorSpace;
+    dogMaterial.onBeforeCompile = onBeforeCompile
 
-    scene.background = gradientBackground;
-    scene.backgroundIntensity = 1.05;
-    scene.backgroundBlurriness = 0.03;
+    model.scene.traverse((child) => {
+        if (child.name.includes("DOG")) {
+            child.material = dogMaterial
+        } else {
+            child.material = branchMaterial
+        }
+    })
 
-    return () => {
-      scene.backgroundIntensity = 1;
-      scene.backgroundBlurriness = 0;
-      scene.background = null;
-      gradientBackground.dispose();
-    };
-  }, [scene]);
+    const dogModel = useRef(model)
 
-  return (
-    <>
-      <primitive object={model.scene} position={[0, -0.9, 0]} rotation={[0, 0, 0]} scale={[1, 1, 1]} />
-      <ambientLight color={0xffffff} intensity={0.75} />
-      <hemisphereLight skyColor={0xffffff} groundColor={0xffffff} intensity={0.35} />
-      <directionalLight color={0xffffff} position={[1.8, 6, 4.8]} intensity={1.9} />
-      <pointLight color={0xffffff} position={[0.3, 2.1, 2.6]} intensity={1.8} distance={7.2} />
-      <pointLight color={0xffffff} position={[-0.2, 1.8, -2.8]} intensity={1.9} distance={7.4} />
-      <OrbitControls target={[0, 0.5, 0]} />
-    </>
-  );
+
+    useGSAP(() => {
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#section-1",
+                endTrigger: "#section-3",
+                start: "top top",
+                end: "bottom bottom",
+                markers: true,
+                scrub: true
+            }
+        })
+
+        tl
+            .to(dogModel.current.scene.position, {
+                z: "-=0.75",
+                y: "+=0.1"
+            })
+            .to(dogModel.current.scene.rotation, {
+                x: `+=${Math.PI / 15}`
+            })
+            .to(dogModel.current.scene.rotation, {
+                y: `-=${Math.PI}`,
+
+            }, "third")
+            .to(dogModel.current.scene.position, {
+                x: "-=0.5",
+                z: "+=0.6",
+                y: "-=0.05"
+            }, "third")
+
+    }, [])
+
+    useEffect(() => {
+
+        const transitionToMatcap = (nextMatcap) => {
+            material.current.uMatcap1.value = nextMatcap
+            gsap.to(material.current.uProgress, {
+                value: 0.0,
+                duration: 0.3,
+                onComplete: () => {
+                    material.current.uMatcap2.value = material.current.uMatcap1.value
+                    material.current.uProgress.value = 1.0
+                }
+            })
+        }
+
+        const listeners = [
+            [ `.title[img-title="tomorrowland"]`, "mouseenter", () => transitionToMatcap(mat19) ],
+            [ `.title[img-title="navy-pier"]`, "mouseenter", () => transitionToMatcap(mat8) ],
+            [ `.title[img-title="msi-chicago"]`, "mouseenter", () => transitionToMatcap(mat9) ],
+            [ `.title[img-title="phone"]`, "mouseenter", () => transitionToMatcap(mat12) ],
+            [ `.title[img-title="kikk"]`, "mouseenter", () => transitionToMatcap(mat10) ],
+            [ `.title[img-title="kennedy"]`, "mouseenter", () => transitionToMatcap(mat8) ],
+            [ `.title[img-title="opera"]`, "mouseenter", () => transitionToMatcap(mat13) ],
+            [ `.titles`, "mouseleave", () => transitionToMatcap(mat2) ]
+        ]
+
+        const attachedListeners = []
+
+        listeners.forEach(([ selector, eventName, handler ]) => {
+            const element = document.querySelector(selector)
+            if (!element) return
+
+            element.addEventListener(eventName, handler)
+            attachedListeners.push([ element, eventName, handler ])
+        })
+
+        return () => {
+            attachedListeners.forEach(([ element, eventName, handler ]) => {
+                element.removeEventListener(eventName, handler)
+            })
+        }
+
+    }, [ mat2, mat8, mat9, mat10, mat12, mat13, mat19 ])
+
+
+    return (
+        <>
+            <primitive object={model.scene} position={[ 0.25, -0.55, 0 ]} rotation={[ 0, Math.PI / 3.9, 0 ]} />
+            <directionalLight position={[ 0, 5, 5 ]} color={0xFFFFFF} intensity={10} />
+        </>
+    )
 }
+
+export default Dog
