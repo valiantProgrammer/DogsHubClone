@@ -110,7 +110,25 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section id='section-3'></section>
+        <section id='section-3'>
+          <div className="top">
+            <div className="left">
+              <h3>Lorem ipsum dolor<br />
+                sit amet consectetur<br />
+                adipisicing elit.<br />
+                Optio, deleniti?</h3>
+            </div>
+            <div className="right"></div>
+          </div>
+          <div className="bottom">
+            <div className="left"></div>
+            <div className="right">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, cum. Cupiditate autem atque dolorem ipsam culpa rem nisi, dignissimos error libero quibusdam est earum possimus excepturi et, eaque sed ratione rerum voluptate ex sunt! Ipsa labore ducimus error, vero enim aperiam iusto odit et aspernatur, minus nesciunt recusandae dolor aliquam?</p>
+
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, cum. Cupiditate autem atque dolorem ipsam culpa rem nisi, dignissimos error libero quibusdam est earum possimus excepturi et, eaque sed ratione rerum voluptate ex sunt! Ipsa labore ducimus error, vero enim aperiam iusto odit et aspernatur, minus nesciunt recusandae dolor aliquam?</p>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
