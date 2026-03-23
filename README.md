@@ -1,5 +1,7 @@
 # DogStudio Portfolio (3D Interactive Web Experience)
 
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19-20232A?logo=react)](https://react.dev/) [![Three.js](https://img.shields.io/badge/Three.js-0.183-black?logo=threedotjs)](https://threejs.org/) [![React Three Fiber](https://img.shields.io/badge/React--Three--Fiber-9.5-111111)](https://docs.pmnd.rs/react-three-fiber) [![GSAP](https://img.shields.io/badge/GSAP-3.14-88CE02?logo=greensock&logoColor=white)](https://gsap.com/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?logo=eslint)](https://eslint.org/)
+
 A creative portfolio inspired by Dogstudio aesthetics, built with Next.js, React Three Fiber, GSAP, and Tailwind CSS.
 
 This project combines:
