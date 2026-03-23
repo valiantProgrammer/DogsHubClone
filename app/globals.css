@@ -175,6 +175,7 @@ section {
 
       small {
         margin-top: 0.7rem;
+        min-width: 7rem;
       }
 
     }
