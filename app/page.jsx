@@ -47,6 +47,10 @@ export default function Home() {
               <i className="ri-menu-3-line"></i>
             </div>
           </nav>
+          <div className='middle'>
+            <div className="left"></div>
+            <div className="right"></div>
+          </div>
         </section>
         <section id='section-2'></section>
         <section id='section-3'></section>

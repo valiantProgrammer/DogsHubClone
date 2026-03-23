@@ -30,11 +30,16 @@ section {
         color: red;
       }
     }
-
     svg {
       max-width: 5rem;
       width: 100%;
       height: 50%;
+    }
+    .middle {
+      display: flex;
+    }
+    .left, .right {
+      width: 50%;
     }
   }
 }
