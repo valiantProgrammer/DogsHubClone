@@ -6,17 +6,25 @@ export default function Home() {
   return (
     <>
       <main>
-        <Canvas style={{
-          height: "100vh",
-          width: "100vw",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 1,
-          backgroundImage: "url(background-l.png)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover"
-        }}>
+        <div className='images'>
+          <img id='tommorowland' src="/tommorowland.png" alt="" />
+          <img id='navy-pier' src="/navy-pier.png" alt="" />
+          <img id='msi' src="/msi-chicago.png" alt="" />
+          <img id='phone' src="/phone.png" alt="" />
+          <img id='kikk' src="/kikk.png" alt="" />
+          <img id='kennedy' src="/kennedy.png" alt="" />
+          <img id='opera' src="/opera.png" alt="" />
+        </div>
+        <Canvas
+          gl={{ alpha: true }}
+          id='canvas-elem'
+          style={{
+            height: "100vh",
+            width: "100vw",
+            position: "fixed",
+            top: 0,
+            left: 0
+          }}>
           <Dog />
         </Canvas>
         <section id='section-1'>
@@ -47,12 +55,61 @@ export default function Home() {
               <i className="ri-menu-3-line"></i>
             </div>
           </nav>
-          <div className='middle'>
-            <div className="left"></div>
+          <div className="middle">
+            <div className="left">
+              <h1> WE <br /> MAKE <br /> GOOD <br /> SHIT </h1>
+            </div>
             <div className="right"></div>
           </div>
+          <div className="bottom">
+            <div className="left">
+            </div>
+            <div className="right">
+              <p className='header'>
+                Dogstudio is a multidisciplinary
+                creative studio at the intersection
+                of art. design technology.
+              </p>
+              <p className='description'>Our goal is to deliver amazing experience that make  people talk, and build strategic value of brand, tech, entertainment art and culture.</p>
+            </div>
+          </div>
+          <div className="first-line"></div>
+          <div className="second-line"></div>
         </section>
-        <section id='section-2'></section>
+        <section id='section-2'>
+          <div className="container">
+            <span className='projects'>Featured projects</span>
+            <div img-id="tommorowland" className="title">
+              <small>2020 - ONGOING</small>
+              <h1>Tomorrowland</h1>
+
+            </div>
+            <div img-id="navy-pier" className="title">
+              <small>2018 - TODAY</small>
+              <h1>Navy Pier</h1>
+            </div>
+            <div img-id="msi" className="title">
+              <small>2015 - TODAY</small>
+              <h1>MSI Chicago</h1>
+            </div>
+            <div img-id="phone" className="title">
+              <small>2014</small>
+              <h1>This was Louise's Phone</h1>
+            </div>
+            <div img-id="kikk" className="title">
+              <small>2012 - TODAY</small>
+              <h1>KIKK Festival 2018</h1>
+            </div>
+            <div img-id="kennedy" className="title">
+              <small>2017</small>
+              <h1>The Kennedy Center</h1>
+            </div>
+            <div img-id="opera" className="title">
+              <small>2016-ONGOING</small>
+              <h1>Royal Opera of Wallonia</h1>
+            </div>
+          </div>
+        </section>
         <section id='section-3'></section>
       </main>
     </>
