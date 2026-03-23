@@ -1,11 +1,64 @@
 "use client"
+import { useEffect } from 'react';
 import { Hedvig_Letters_Sans } from 'next/font/google';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Dog from './components/Dog'
 import { Canvas } from '@react-three/fiber';
 export default function Home() {
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    const animation = gsap.fromTo(
+      "#section-3 .top .left",
+      {
+        y: 120,
+        opacity: 0
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#section-3 .top .left",
+          start: "top 50%",
+          end: "top 25%",
+          scrub: 1
+        }
+      }
+    )
+
+    const maskAnimation = gsap.fromTo(
+      ".section3-window-mask",
+      {
+        opacity: 0
+      },
+      {
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#section-3",
+          start: "top 75%",
+          end: "top 35%",
+          scrub: 1
+        }
+      }
+    )
+
+    return () => {
+      animation.scrollTrigger?.kill()
+      animation.kill()
+      maskAnimation.scrollTrigger?.kill()
+      maskAnimation.kill()
+    }
+  }, [])
+
   return (
     <>
       <main>
+        <div className='section3-window-mask' aria-hidden='true'></div>
         <div className='images'>
           <img id='tommorowland' src="/tommorowland.png" alt="" />
           <img id='navy-pier' src="/navy-pier.png" alt="" />
@@ -59,7 +112,7 @@ export default function Home() {
           </nav>
           <div className="middle">
             <div className="left">
-              <h1> WE <br /> MAKE <br /> GOOD <br /> SHIT </h1>
+              <h1 className='italiana-regular'> WE <br /> MAKE <br /> GOOD <br /> SHIT </h1>
             </div>
             <div className="right"></div>
           </div>
@@ -115,7 +168,7 @@ export default function Home() {
         <section id='section-3'>
           <div className="top">
             <div className="left">
-              <h3>Lorem ipsum dolor<br />
+              <h3 className='italiana-regular'>Lorem ipsum dolor<br />
                 sit amet consectetur<br />
                 adipisicing elit.<br />
                 Optio, deleniti?</h3>
