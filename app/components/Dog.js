@@ -25,19 +25,19 @@ const Dog = () => {
     const { actions } = useAnimations(model.animations, model.scene)
 
     useEffect(() => {
-        actions[ "Take 001" ].play()
-    }, [ actions ])
+        actions["Take 001"].play()
+    }, [actions])
 
 
 
-    const [ normalMap ] = (useTexture([ "/dog_normals.jpg", ]))
+    const [normalMap] = (useTexture(["/dog_normals.jpg",]))
         .map(texture => {
             texture.flipY = false
             texture.colorSpace = THREE.SRGBColorSpace
             return texture
         })
 
-    const [ branchMap, branchNormalMap ] = (useTexture([ "/branches_diffuse.jpeg", "branches_normals.jpeg" ]))
+    const [branchMap, branchNormalMap] = (useTexture(["/branches_diffuse.jpeg", "branches_normals.jpeg"]))
         .map(texture => {
             texture.colorSpace = THREE.SRGBColorSpace
             return texture
@@ -198,39 +198,39 @@ const Dog = () => {
         }
 
         const listeners = [
-            [ `.title[img-title="tomorrowland"]`, "mouseenter", () => transitionToMatcap(mat19) ],
-            [ `.title[img-title="navy-pier"]`, "mouseenter", () => transitionToMatcap(mat8) ],
-            [ `.title[img-title="msi-chicago"]`, "mouseenter", () => transitionToMatcap(mat9) ],
-            [ `.title[img-title="phone"]`, "mouseenter", () => transitionToMatcap(mat12) ],
-            [ `.title[img-title="kikk"]`, "mouseenter", () => transitionToMatcap(mat10) ],
-            [ `.title[img-title="kennedy"]`, "mouseenter", () => transitionToMatcap(mat8) ],
-            [ `.title[img-title="opera"]`, "mouseenter", () => transitionToMatcap(mat13) ],
-            [ `.titles`, "mouseleave", () => transitionToMatcap(mat2) ]
+            [`.title[img-id="tommorowland"]`, "mouseenter", () => transitionToMatcap(mat19)],
+            [`.title[img-id="navy-pier"]`, "mouseenter", () => transitionToMatcap(mat8)],
+            [`.title[img-id="msi"]`, "mouseenter", () => transitionToMatcap(mat9)],
+            [`.title[img-id="phone"]`, "mouseenter", () => transitionToMatcap(mat12)],
+            [`.title[img-id="kikk"]`, "mouseenter", () => transitionToMatcap(mat10)],
+            [`.title[img-id="kennedy"]`, "mouseenter", () => transitionToMatcap(mat8)],
+            [`.title[img-id="opera"]`, "mouseenter", () => transitionToMatcap(mat13)],
+            [`.container`, "mouseleave", () => transitionToMatcap(mat2)]
         ]
 
         const attachedListeners = []
 
-        listeners.forEach(([ selector, eventName, handler ]) => {
+        listeners.forEach(([selector, eventName, handler]) => {
             const element = document.querySelector(selector)
             if (!element) return
 
             element.addEventListener(eventName, handler)
-            attachedListeners.push([ element, eventName, handler ])
+            attachedListeners.push([element, eventName, handler])
         })
 
         return () => {
-            attachedListeners.forEach(([ element, eventName, handler ]) => {
+            attachedListeners.forEach(([element, eventName, handler]) => {
                 element.removeEventListener(eventName, handler)
             })
         }
 
-    }, [ mat2, mat8, mat9, mat10, mat12, mat13, mat19 ])
+    }, [mat2, mat8, mat9, mat10, mat12, mat13, mat19])
 
 
     return (
         <>
-            <primitive object={model.scene} position={[ 0.25, -0.55, 0 ]} rotation={[ 0, Math.PI / 3.9, 0 ]} />
-            <directionalLight position={[ 0, 5, 5 ]} color={0xFFFFFF} intensity={10} />
+            <primitive object={model.scene} position={[0.25, -0.55, 0]} rotation={[0, Math.PI / 3.9, 0]} />
+            <directionalLight position={[0, 5, 5]} color={0xFFFFFF} intensity={10} />
         </>
     )
 }
