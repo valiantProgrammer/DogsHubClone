@@ -17,13 +17,15 @@ export default function Home() {
         </div>
         <Canvas
           gl={{ alpha: true }}
+          onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
           id='canvas-elem'
           style={{
             height: "100vh",
             width: "100vw",
             position: "fixed",
             top: 0,
-            left: 0
+            left: 0,
+            zIndex: 1
           }}>
           <Dog />
         </Canvas>

@@ -247,6 +247,8 @@ main:has(#section-2 .title[img-id="opera"]:hover) .images #opera {
 
 #section-3 {
 
+  z-index: auto;
+
   padding-inline: 10rem;
 
   padding-block: 20rem;
@@ -266,6 +268,9 @@ main:has(#section-2 .title[img-id="opera"]:hover) .images #opera {
     }
 
     .left {
+      position: relative;
+      z-index: -1;
+
       h3 {
         padding-left: 12rem;
         font-size: 3rem;
@@ -276,6 +281,8 @@ main:has(#section-2 .title[img-id="opera"]:hover) .images #opera {
     }
 
     .right {
+      position: relative;
+      z-index: 2;
       display: flex;
       gap: 2rem;
 
@@ -289,4 +296,20 @@ main:has(#section-2 .title[img-id="opera"]:hover) .images #opera {
     }
   }
 
+}
+
+#section-3 {
+  z-index: auto;
+}
+
+#section-3 .top .left,
+#section-3 .bottom .left {
+  position: relative;
+  z-index: 0;
+}
+
+#section-3 .top .right,
+#section-3 .bottom .right {
+  position: relative;
+  z-index: 3;
 }
